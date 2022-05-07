@@ -1,5 +1,8 @@
 const express = require("express");
 const Jokes = require("../models/Jokes")
+const favicon = require("serve-favicon");
+const path = require("path");
+const app = require("express/lib/router");
 const router = express.Router();
 
 // Get Request

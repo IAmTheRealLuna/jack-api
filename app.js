@@ -9,6 +9,9 @@ const path = require('path')
 const moment = require('moment');
 const compression = require('compression')
 const helmet = require("helmet");
+const favicon = require('serve-favicon')
+const rateLimit = require('express-rate-limit')
+
 require("dotenv").config();
 
 // DB Connection init
@@ -27,6 +30,15 @@ const accessLogStream = rfs.createStream(`${moment().format('DD-MM-YYYY')}-acces
 
 // Sentry Inits
 Sentry.init({ dsn: process.env.DSN });
+
+const apiRequestLimiter = rateLimit({
+  windowMs: 60 * 1000 * 60, // 60 minute
+  max: 3000 // limit each IP to 3000 requests per windowMs
+})
+
+app.use(apiRequestLimiter)
+
+app.use(favicon(path.join(__dirname, 'assets', 'favicon.png')))
 
 // Parser for JSON
 app.use(bodyParser.json());
